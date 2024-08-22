@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "1039164618090",
+    "firebase_url": "https://wewew-df743-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "wewew-df743",
+    "storage_bucket": "wewew-df743.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1039164618090:android:def985d030126f0319a113",
+        "android_client_info": {
+          "package_name": "com.example.curd_firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADHsLGsoMD3QbD26aIAv2AIl1citf1Gzc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1039164618090:android:c197702b1bbd5eb019a113",
+        "android_client_info": {
+          "package_name": "com.example.todoapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADHsLGsoMD3QbD26aIAv2AIl1citf1Gzc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
