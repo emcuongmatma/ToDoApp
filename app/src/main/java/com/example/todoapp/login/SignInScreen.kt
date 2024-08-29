@@ -1,6 +1,4 @@
 package com.example.todoapp.login
-
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
@@ -18,9 +17,9 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,9 +28,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -66,11 +65,13 @@ fun SignInScreen(
     var pwd by remember {
         mutableStateOf("")
     }
+    var isError by remember {
+        mutableStateOf(false)
+    }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color(0xFFe1e2ec)),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -85,17 +86,31 @@ fun SignInScreen(
 
             )
         Spacer(modifier = Modifier.height(24.dp))
-        TextField(
+        OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             label = { Text(text = "Type your email") },
-            modifier = Modifier.clip(shape = RoundedCornerShape(15.dp)))
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
+            isError = isError,
+            shape = RoundedCornerShape(24.dp))
         Spacer(modifier = Modifier.height(12.dp))
-        TextField(value = pwd, onValueChange = { pwd = it }, label = {
+        OutlinedTextField(value = pwd, onValueChange = { pwd = it }, label = {
             Text("Type your password")
         },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Send),
+            keyboardActions = KeyboardActions {
+                if ((email.isNotEmpty()) and (pwd.isNotEmpty()))
+                    onSignIn(email,pwd)
+                else
+                    isError=true
+            },
+            isError = isError,
             trailingIcon = {
                 // Please provide localized description for accessibility services
                 val description = if (passwordVisible) "Hide password" else "Show password"
@@ -104,7 +119,7 @@ fun SignInScreen(
                     Icon(imageVector = Icons.Default.Info, description)
                 }
             },
-            modifier = Modifier.clip(shape = RoundedCornerShape(15.dp)))
+            shape = RoundedCornerShape(24.dp))
         Spacer(modifier = Modifier.height(12.dp))
         Spacer(modifier = Modifier.height(12.dp))
         Row (verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()){
@@ -117,8 +132,10 @@ fun SignInScreen(
         }
         Spacer(modifier = Modifier.height(12.dp))
         Button(onClick = {
-            onSignIn(email,pwd)
-            pwd=""
+            if ((email.isNotEmpty()) and (pwd.isNotEmpty()))
+                onSignIn(email,pwd)
+            else
+                isError=true
         }, colors = ButtonColors(
             contentColor = Color.White,
             containerColor = Color(0xFF0b2964),

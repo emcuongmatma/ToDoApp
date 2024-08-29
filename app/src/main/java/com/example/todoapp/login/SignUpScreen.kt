@@ -2,7 +2,6 @@ package com.example.todoapp.login
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,9 +19,9 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,9 +30,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -74,13 +73,12 @@ fun SignUpScreen(
         mutableStateOf("")
     }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
-    val pwdCheck by remember {
+    var pwdCheck by remember {
         mutableStateOf(false)
     }
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color(0xFFe1e2ec)),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -95,18 +93,26 @@ fun SignUpScreen(
 
             )
         Spacer(modifier = Modifier.height(24.dp))
-        TextField(
+        OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             label = { Text(text = "Type your email") },
-            modifier = Modifier.clip(shape = RoundedCornerShape(15.dp))
+            isError = pwdCheck,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
+            shape = RoundedCornerShape(24.dp)
         )
         Spacer(modifier = Modifier.height(12.dp))
-        TextField(value = pwd, onValueChange = { pwd = it }, label = {
+        OutlinedTextField(value = pwd, onValueChange = { pwd = it }, label = {
             Text("Type your password")
         },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Next
+            ),
             trailingIcon = {
                 // Please provide localized description for accessibility services
                 val description = if (passwordVisible) "Hide password" else "Show password"
@@ -116,14 +122,15 @@ fun SignUpScreen(
                 }
             },
             isError = pwdCheck,
-            modifier = Modifier.clip(shape = RoundedCornerShape(15.dp))
-        )
+            shape = RoundedCornerShape(24.dp))
         Spacer(modifier = Modifier.height(12.dp))
-        TextField(value = cpwd, onValueChange = { cpwd = it }, label = {
+        OutlinedTextField(value = cpwd, onValueChange = { cpwd = it }, label = {
             Text("Confirm password")
         },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done),
             trailingIcon = {
                 // Please provide localized description for accessibility services
                 val description = if (passwordVisible) "Hide password" else "Show password"
@@ -133,8 +140,7 @@ fun SignUpScreen(
                 }
             },
             isError = pwdCheck,
-            modifier = Modifier.clip(shape = RoundedCornerShape(15.dp))
-        )
+            shape = RoundedCornerShape(24.dp))
         Spacer(modifier = Modifier.height(12.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -151,17 +157,21 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(12.dp))
         Button(
             onClick = {
-                if (pwd != cpwd) {
-                    pwd=""
-                    cpwd=""
-                    Toast.makeText(
-                        context,
-                        "Mật khẩu và mật khẩu xác nhận không trùng khớp",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    onSignUp(email, pwd)
+                if ((email.isNotEmpty()) and (pwd.isNotEmpty()) and (cpwd.isNotEmpty())) {
+                    if (pwd != cpwd) {
+                        pwd = ""
+                        cpwd = ""
+                        Toast.makeText(
+                            context,
+                            "Mật khẩu và mật khẩu xác nhận không trùng khớp",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        onSignUp(email, pwd)
+                    }
                 }
+                else
+                    pwdCheck=true
 
             }, colors = ButtonColors(
                 contentColor = Color.White,

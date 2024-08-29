@@ -157,7 +157,7 @@ fun MainApp(
                             auth.currentUser!!.uid).child(id)
                         delete.removeValue()
                             .addOnSuccessListener {
-                                Toast.makeText(context,"Xoa thanh cong",Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context,"Task Done !",Toast.LENGTH_SHORT).show()
                             }
                             .addOnFailureListener {
                                 err->

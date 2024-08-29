@@ -16,11 +16,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -37,6 +41,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -77,13 +82,12 @@ fun HomeScreen(
                 .background(color = Color.White),
 
             ) {
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             Text(
                 text = "To-Do List", style = MaterialTheme.typography.headlineLarge.copy(
                     color = Color(0xFF0b2964), fontWeight = FontWeight.Bold
                 )
             )
-            Spacer(modifier = Modifier.height(24.dp))
             TextField(value = task,
                 onValueChange = { task = it },
                 modifier = Modifier
@@ -114,7 +118,6 @@ fun HomeScreen(
                     }
                 })
             Spacer(modifier = Modifier.height(24.dp))
-
             LoadingDialog(state = state)
             Lazy(state = state, onDelete = onDelete, onModify = onModify)
         }
@@ -133,6 +136,7 @@ fun Lazy(
     var task by remember {
         mutableStateOf("")
     }
+
     val listState = rememberLazyListState()
     if ((state.lazyState.value == LazyScreen.Updating) or (state.lazyState.value == LazyScreen.Updated)) {
         LazyColumn(state = listState) {
@@ -146,13 +150,24 @@ fun Lazy(
                             shape = RoundedCornerShape(20.dp)
                         )
                 ) {
-                    val (text, button) = createRefs()
+                    var isDone by remember {
+                        mutableStateOf(false)
+                    }
+                    val (btnCheck, text, btn) = createRefs()
+                    RadioButton(selected = isDone, onClick = {
+                        isDone = !isDone
+                    }, modifier = Modifier.constrainAs(btnCheck) {
+                        start.linkTo(parent.start)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    })
                     Text(text = buildAnnotatedString {
                         withStyle(
                             style = SpanStyle(
                                 color = Color(0xFF0b2964),
                                 fontSize = 30.sp,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.Medium,
+                                textDecoration = if (!isDone) TextDecoration.None else TextDecoration.LineThrough
                             )
                         )
                         { append(item.title) }
@@ -161,21 +176,22 @@ fun Lazy(
                                 color = Color(0xFF0b2964),
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Light,
-                                fontStyle = FontStyle.Italic
+                                fontStyle = FontStyle.Italic,
+                                textDecoration = if (!isDone) TextDecoration.None else TextDecoration.LineThrough
                             )
                         )
                         { append("\nCreated At : ${item.createdAt}") }
                     }, modifier = Modifier.constrainAs(text) {
-                        start.linkTo(parent.start, margin = 10.dp)
+                        start.linkTo(btnCheck.end, margin = 10.dp)
                         top.linkTo(parent.top)
                         bottom.linkTo(parent.bottom)
                     })
-                    Column(modifier = Modifier.constrainAs(button) {
+                    Column(modifier = Modifier.constrainAs(btn) {
                         end.linkTo(parent.end, margin = 10.dp)
                     }) {
                         Button(
                             onClick = {
-                                tmp = Task(item.taskId,item.title,item.createdAt)
+                                tmp = Task(item.taskId, item.title, item.createdAt)
                                 task = item.title
                                 state.openDialog.value = true
                             },
@@ -203,7 +219,7 @@ fun Lazy(
                             )
                         ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_del),
+                                Icons.Default.Delete,
                                 contentDescription = null
                             )
                         }
@@ -230,11 +246,26 @@ fun Lazy(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    TextField(value = task, onValueChange = { task = it })
-                    Button(onClick = {
-                        tmp.title = task
-                        onModify(tmp)
-                    }) {
+                    Text(
+                        text = "Nhập tên mới",
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            color = Color(0xFF0b2964), fontWeight = FontWeight.Bold
+                        )
+                    )
+                    OutlinedTextField(value = task, onValueChange = { task = it })
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Button(
+                        onClick = {
+                            tmp.title = task
+                            onModify(tmp)
+                        },
+                        colors = ButtonColors(
+                            containerColor = Color(0xFFff653e),
+                            contentColor = Color.White,
+                            disabledContentColor = Color(0xFFff653e),
+                            disabledContainerColor = Color(0xFFff653e)
+                        )
+                    ) {
                         Text(text = "Update Data")
                     }
                 }
