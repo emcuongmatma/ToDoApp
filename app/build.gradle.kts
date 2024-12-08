@@ -93,5 +93,4 @@ dependencies {
     implementation(libs.jnav)
     ksp(libs.jnav)
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.androidx.constraintlayout.compose.v110)
 }
