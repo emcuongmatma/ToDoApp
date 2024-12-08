@@ -125,7 +125,6 @@ fun SignInScreen(
                 shape = RoundedCornerShape(24.dp),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        viewModel.login()
                         focusManager.clearFocus()
                     }
                 )

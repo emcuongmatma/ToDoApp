@@ -143,7 +143,6 @@ fun SignUpScreen(
                 shape = RoundedCornerShape(24.dp),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        viewModel.signup()
                         focusManager.clearFocus()
                     }
                 )
