@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.gms.google-services")
     id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -71,6 +72,19 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
+    implementation(libs.androidx.animation)
+
+
+    //roomdatabase
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
+
+    //hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.navigation.compose)
@@ -78,6 +92,6 @@ dependencies {
 
     implementation(libs.jnav)
     ksp(libs.jnav)
-    implementation("androidx.core:core-splashscreen:1.0.1")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.constraintlayout.compose.v110)
 }
