@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun DialogEditor(viewModel: HomeViewModel) {
     val state = viewModel.uiState.collectAsState()
-    var newTile by remember {
+    var newTitle by remember {
         mutableStateOf(viewModel.uiState.value.tmpTask.title)
     }
     AlertDialog(
@@ -24,11 +24,11 @@ fun DialogEditor(viewModel: HomeViewModel) {
         title = { Text(text = "Nhập tên mới cho task") },
         containerColor = Color(0xFFe1e2ec),
         titleContentColor = Color(0xFF0b2964),
-        text = { OutlinedTextField(value = newTile, onValueChange = { newTile = it }) },
+        text = { OutlinedTextField(value = newTitle, onValueChange = { newTitle = it }) },
         confirmButton = {
             Button(
                 onClick = {
-                    val tmpTask = state.value.tmpTask.copy(title = newTile)
+                    val tmpTask = state.value.tmpTask.copy(title = newTitle)
                     viewModel.editTask(tmpTask)
                     viewModel.updateOpenDialog(false)
                 },

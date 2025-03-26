@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -47,15 +48,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.todoapp.MainViewModel
 import com.example.todoapp.common.enum.LoadStatus
+import com.example.todoapp.data.Result
 import com.example.todoapp.ui.sceens.home.HomeNavigation
 import com.fatherofapps.jnav.annotations.JNav
 import com.fatherofapps.jnav.annotations.JNavArg
 
 @Composable
 @JNav(
-    destination = "signin_destination",
-    baseRoute = "signin_route",
-    name = "SignInNavigation",
+    destination = "login_destination",
+    baseRoute = "login_route",
+    name = "LoginNavigation",
     arguments = [
         JNavArg(
             name = "email",
@@ -64,7 +66,7 @@ import com.fatherofapps.jnav.annotations.JNavArg
         )
     ]
 )
-fun SignInScreen(
+fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel,
     mainViewModel: MainViewModel
@@ -73,24 +75,29 @@ fun SignInScreen(
     var isError by remember {
         mutableStateOf(false)
     }
+    val status = viewModel.authResult.observeAsState()
     val focusManager = LocalFocusManager.current
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     Scaffold { paddingValue ->
         Column(
             modifier = Modifier
                 .padding(paddingValue)
-                .background(color = if (isSystemInDarkTheme()) Color(0xFF0b2964) else Color(0xFFe1e2ec) )
+                .background(
+                    color = if (isSystemInDarkTheme()) Color(0xFF0b2964) else Color(
+                        0xFFe1e2ec
+                    )
+                )
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Sign In",
+                text = "Login",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = if (!isSystemInDarkTheme()) Color(0xFF0b2964) else Color(0xFFe1e2ec),
                     fontWeight = FontWeight.Bold,
-                    ),
-                )
+                ),
+            )
             Spacer(modifier = Modifier.height(24.dp))
             OutlinedTextField(
                 value = state.value.username,
@@ -158,20 +165,22 @@ fun SignInScreen(
             ) {
                 Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null, tint = Color.White)
             }
-            when (state.value.status) {
-                is LoadStatus.Loading -> {
-                    CircularProgressIndicator()
-                }
-                is LoadStatus.Success -> {
+            if (state.value.status is LoadStatus.Loading){
+                CircularProgressIndicator()
+            }
+            when (status.value) {
+                is Result.Success -> {
                     LaunchedEffect(Unit) {
-                        navController.navigate(HomeNavigation.route)
+                        navController.navigate(HomeNavigation.route) {
+                            popUpTo(0)
+                        }
                     }
                 }
-                is LoadStatus.Error -> {
-                    mainViewModel.setError(state.value.status.description)
+                is Result.Error -> {
+                    mainViewModel.setError("Tài khoản hoặc mật khẩu không đúng")
                     viewModel.reset()
                 }
-                is LoadStatus.Intit -> {}
+                else -> {}
             }
         }
     }

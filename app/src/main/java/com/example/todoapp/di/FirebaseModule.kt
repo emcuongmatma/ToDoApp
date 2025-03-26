@@ -1,5 +1,5 @@
 package com.example.todoapp.di
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -9,9 +9,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class FirebaseModule{
+    private val instance: FirebaseFirestore by lazy {
+        FirebaseFirestore.getInstance()
+    }
     @Provides
     @Singleton
-    fun provideTodoAppDB(): FirebaseDatabase {
-        return FirebaseDatabase.getInstance()
+    fun instance(): FirebaseFirestore {
+        return instance
     }
 }

@@ -10,7 +10,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.todoapp.ui.sceens.AuthenticationViewModel
 import com.example.todoapp.ui.sceens.home.HomeNavigation
-import com.example.todoapp.ui.sceens.login.SignInNavigation
+import com.example.todoapp.ui.sceens.login.LoginNavigation
 import com.example.todoapp.ui.theme.TodoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ToDoApp(
 ) {
-    var startDestination: String= SignInNavigation.route
+    var startDestination: String= LoginNavigation.route
     val authViewModel : AuthenticationViewModel = hiltViewModel()
     val authState = authViewModel.uiState.collectAsState()
     if (authState.value.authStatus){

@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -47,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.todoapp.MainViewModel
 import com.example.todoapp.common.enum.LoadStatus
+import com.example.todoapp.data.Result
 import com.example.todoapp.ui.sceens.home.HomeNavigation
 import com.fatherofapps.jnav.annotations.JNav
 import com.fatherofapps.jnav.annotations.JNavArg
@@ -71,6 +73,7 @@ fun SignUpScreen(
     var pwdCheck by remember {
         mutableStateOf(false)
     }
+    val status = viewModel.authResult.observeAsState()
     val focusManager = LocalFocusManager.current
     LaunchedEffect(Unit) {
         viewModel.updateUsername(tmpemail)
@@ -80,7 +83,11 @@ fun SignUpScreen(
             modifier = Modifier
                 .padding(paddingValue)
                 .fillMaxSize()
-                .background(color = if (isSystemInDarkTheme()) Color(0xFF0b2964) else Color(0xFFe1e2ec)),
+                .background(
+                    color = if (isSystemInDarkTheme()) Color(0xFF0b2964) else Color(
+                        0xFFe1e2ec
+                    )
+                ),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -96,7 +103,6 @@ fun SignUpScreen(
                 value = state.value.username,
                 onValueChange = { viewModel.updateUsername(it) },
                 label = { Text(text = "Type your email") },
-                isError = pwdCheck,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email, imeAction = ImeAction.Next
                 ),
@@ -175,18 +181,23 @@ fun SignUpScreen(
             ) {
                 Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null, tint = Color.White)
             }
-            when (state.value.status) {
-                is LoadStatus.Loading -> {
-                    CircularProgressIndicator()
-                }
-                is LoadStatus.Success -> {
+            if (state.value.status is LoadStatus.Loading){
+                CircularProgressIndicator()
+            }
+            when (status.value) {
+                is Result.Success -> {
                     /// chuyen den home
                     LaunchedEffect(Unit) {
-                        navController.navigate(HomeNavigation.route)
+                        navController.navigate(HomeNavigation.route) {
+                            popUpTo(0)
+                        }
                     }
                 }
-                is LoadStatus.Error -> {
-                    mainViewModel.setError(state.value.status.description)
+                is Result.Error -> {
+                    pwdCheck = true
+                    mainViewModel.setError(viewModel.authResult.value.toString())
+                    viewModel.updatePwd("")
+                    viewModel.updatecpwd("")
                     viewModel.reset()
                 }
                 else -> {}

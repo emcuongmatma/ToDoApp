@@ -11,8 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.todoapp.ui.sceens.home.HomeNavigation
 import com.example.todoapp.ui.sceens.home.HomeScreen
-import com.example.todoapp.ui.sceens.login.SignInNavigation
-import com.example.todoapp.ui.sceens.login.SignInScreen
+import com.example.todoapp.ui.sceens.login.LoginNavigation
+import com.example.todoapp.ui.sceens.login.LoginScreen
 import com.example.todoapp.ui.sceens.login.SignUpNavigation
 import com.example.todoapp.ui.sceens.login.SignUpScreen
 
@@ -34,8 +34,8 @@ fun Navigation(
         composable(HomeNavigation.route) {
             HomeScreen(viewModel= hiltViewModel(),mainViewModel = mainViewModel)
         }
-        composable(SignInNavigation.route) {
-            SignInScreen(navController, viewModel = hiltViewModel(), mainViewModel = mainViewModel)
+        composable(LoginNavigation.route) {
+            LoginScreen(navController, viewModel = hiltViewModel(), mainViewModel = mainViewModel)
         }
         composable(SignUpNavigation.route, arguments = SignUpNavigation.arguments()) {
             SignUpScreen(

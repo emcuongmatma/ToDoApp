@@ -1,8 +1,11 @@
 package com.example.todoapp.ui.sceens.login
 
+
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.common.enum.LoadStatus
+import com.example.todoapp.data.Result
 import com.example.todoapp.data.repositories.Api
 import com.example.todoapp.data.repositories.MainLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +19,7 @@ data class LoginUiState(
     val username: String = "",
     val password: String = "",
     val confirmpwd: String = "",
-    val status: LoadStatus = LoadStatus.Intit()
+    val status: LoadStatus = LoadStatus.Init()
 )
 
 @HiltViewModel
@@ -26,6 +29,8 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()
+    private val _authResult = MutableLiveData<Result<Boolean>?>()
+    val authResult: MutableLiveData<Result<Boolean>?> get() = _authResult
     fun updateUsername(username: String) {
         _uiState.value = _uiState.value.copy(username = username)
     }
@@ -41,14 +46,9 @@ class LoginViewModel @Inject constructor(
     fun login() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
-            try {
-                @Suppress("UNUSED_VARIABLE") var result = api?.login(uiState.value.username, uiState.value.password)
-                _uiState.value = _uiState.value.copy(status = LoadStatus.Success())
-            } catch (ex: Exception) {
-                updatePwd("")
-                _uiState.value =
-                    _uiState.value.copy(status = LoadStatus.Error(ex.message.toString()))
-            }
+            _authResult.value =
+                api?.login(username = _uiState.value.username, password = _uiState.value.password)
+            _uiState.value = _uiState.value.copy(status = LoadStatus.Init())
         }
 
     }
@@ -56,20 +56,17 @@ class LoginViewModel @Inject constructor(
     fun signup() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
-            try {
-                @Suppress("UNUSED_VARIABLE") var result = api?.signup(uiState.value.username, uiState.value.password,uiState.value.confirmpwd)
-                _uiState.value = _uiState.value.copy(status = LoadStatus.Success())
-            } catch (ex: Exception) {
-                updatecpwd("")
-                updatePwd("")
-                _uiState.value =
-                    _uiState.value.copy(status = LoadStatus.Error(ex.message.toString()))
-            }
-
+            _authResult.value = api?.signup(
+                username = _uiState.value.username,
+                password = _uiState.value.password,
+                cpwd = _uiState.value.confirmpwd
+            )
+            _uiState.value = _uiState.value.copy(status = LoadStatus.Init())
         }
     }
 
     fun reset() {
-        _uiState.value = _uiState.value.copy(status = LoadStatus.Intit())
+        _authResult.value = null
+        _uiState.value = _uiState.value.copy(status = LoadStatus.Init())
     }
 }
