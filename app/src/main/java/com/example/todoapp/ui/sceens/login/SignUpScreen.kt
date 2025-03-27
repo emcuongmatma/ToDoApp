@@ -170,6 +170,8 @@ fun SignUpScreen(
             Button(
                 onClick = {
                     if ((state.value.username.isNotEmpty()) and (state.value.password.isNotEmpty()) and (state.value.confirmpwd.isNotEmpty())) {
+                        if (state.value.password != state.value.confirmpwd)
+                            mainViewModel.setError("Mật khẩu và xác nhận mật khẩu không trùng khớp !")
                         viewModel.signup()
                     } else pwdCheck = true
                 }, colors = ButtonColors(

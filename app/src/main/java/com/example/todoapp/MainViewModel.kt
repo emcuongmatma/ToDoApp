@@ -13,7 +13,7 @@ data class MainState(
 
 @HiltViewModel
 class MainViewModel @Inject constructor():ViewModel() {
-    val _uiState = MutableStateFlow(MainState())
+    private val _uiState = MutableStateFlow(MainState())
     val uiState = _uiState.asStateFlow()
     fun setError(message: String){
         _uiState.value =_uiState.value.copy(error = message)

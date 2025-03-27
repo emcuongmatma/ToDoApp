@@ -80,7 +80,6 @@ class HomeViewModel @Inject constructor(
                 is Result.Success -> {}
                 is Result.Error -> {}
                 is Result.Loading -> {
-
                 }
             }
         }

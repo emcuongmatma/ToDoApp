@@ -26,8 +26,6 @@ class ApiImpl @Inject constructor(
     }
     override suspend fun signup(username: String, password: String, cpwd: String): Result<Boolean> =
         try {
-            if (password != cpwd)
-                throw Exception("Mật khẩu và xác nhận mật khẩu không trùng khớp !")
             auth.createUserWithEmailAndPassword(username, password).await()
             Result.Success(true)
         } catch (e: Exception) {

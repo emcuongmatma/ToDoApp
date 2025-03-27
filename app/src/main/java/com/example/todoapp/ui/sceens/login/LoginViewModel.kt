@@ -1,6 +1,7 @@
 package com.example.todoapp.ui.sceens.login
 
 
+import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -46,16 +47,19 @@ class LoginViewModel @Inject constructor(
     fun login() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
+            if (!uiState.value.username.isEmailValid())
+                _uiState.value = _uiState.value.copy(username = uiState.value.username+"@todoapp.com")
             _authResult.value =
                 api?.login(username = _uiState.value.username, password = _uiState.value.password)
             _uiState.value = _uiState.value.copy(status = LoadStatus.Init())
         }
 
     }
-
     fun signup() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
+            if (!uiState.value.username.isEmailValid())
+                _uiState.value = _uiState.value.copy(username = uiState.value.username+"@todoapp.com")
             _authResult.value = api?.signup(
                 username = _uiState.value.username,
                 password = _uiState.value.password,
@@ -64,9 +68,11 @@ class LoginViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(status = LoadStatus.Init())
         }
     }
-
     fun reset() {
         _authResult.value = null
         _uiState.value = _uiState.value.copy(status = LoadStatus.Init())
     }
+}
+fun String.isEmailValid(): Boolean {
+    return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
 }

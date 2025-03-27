@@ -18,7 +18,7 @@ fun Lazy(
 ) {
     val state by viewModel.uiState.collectAsState()
     LazyColumn {
-        items(items = tasks, key = { it.title }) { item ->
+        items(items = tasks, key = { it.taskId }) { item ->
             Spacer(modifier = Modifier.height(10.dp))
             TaskItem(
                 task = item,
