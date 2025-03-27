@@ -50,6 +50,9 @@ import com.example.todoapp.MainViewModel
 import com.example.todoapp.common.enum.LoadStatus
 import com.example.todoapp.data.Result
 import com.example.todoapp.ui.sceens.home.HomeNavigation
+import com.example.todoapp.ui.theme.darkBlue
+import com.example.todoapp.ui.theme.lightBlue
+import com.example.todoapp.ui.theme.whiteBackground
 import com.fatherofapps.jnav.annotations.JNav
 import com.fatherofapps.jnav.annotations.JNavArg
 
@@ -84,9 +87,7 @@ fun SignUpScreen(
                 .padding(paddingValue)
                 .fillMaxSize()
                 .background(
-                    color = if (isSystemInDarkTheme()) Color(0xFF0b2964) else Color(
-                        0xFFe1e2ec
-                    )
+                    color = if (isSystemInDarkTheme()) lightBlue else whiteBackground
                 ),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -94,7 +95,7 @@ fun SignUpScreen(
             Text(
                 text = "Sign Up",
                 style = MaterialTheme.typography.headlineLarge.copy(
-                    color = if (!isSystemInDarkTheme()) Color(0xFF0b2964) else Color(0xFFe1e2ec),
+                    color = if (!isSystemInDarkTheme()) lightBlue else whiteBackground,
                     fontWeight = FontWeight.Bold,
                 ),
             )
@@ -176,8 +177,8 @@ fun SignUpScreen(
                     } else pwdCheck = true
                 }, colors = ButtonColors(
                     contentColor = Color.White,
-                    containerColor = Color(0xFF0b2964),
-                    disabledContainerColor = Color(0xFF0b2964),
+                    containerColor = darkBlue,
+                    disabledContainerColor = darkBlue,
                     disabledContentColor = Color.White
                 )
             ) {

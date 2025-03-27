@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import com.example.todoapp.ui.theme.orangeBackground
 
 @Composable
 fun DialogEditor(viewModel: HomeViewModel) {
@@ -33,10 +34,10 @@ fun DialogEditor(viewModel: HomeViewModel) {
                     viewModel.updateOpenDialog(false)
                 },
                 colors = ButtonColors(
-                    containerColor = Color(0xFFff653e),
+                    containerColor = orangeBackground,
                     contentColor = Color.White,
-                    disabledContentColor = Color(0xFFff653e),
-                    disabledContainerColor = Color(0xFFff653e)
+                    disabledContentColor = orangeBackground,
+                    disabledContainerColor = orangeBackground
                 )
             ) {
                 Text(text = "Update Data")

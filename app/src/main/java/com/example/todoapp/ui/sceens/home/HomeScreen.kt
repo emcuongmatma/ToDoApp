@@ -33,11 +33,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.todoapp.MainViewModel
 import com.example.todoapp.common.enum.LoadStatus
+import com.example.todoapp.ui.theme.darkBlue
+import com.example.todoapp.ui.theme.lightBlue
+import com.example.todoapp.ui.theme.orangeBackground
+import com.example.todoapp.ui.theme.whiteBackground
 import com.fatherofapps.jnav.annotations.JNav
 
 @Composable
@@ -64,22 +69,23 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(paddingValue)
                 .background(
-                    color = if (isSystemInDarkTheme()) Color(0xFF2F3C7E) else Color.White
+                    color = if (isSystemInDarkTheme()) lightBlue else Color.White
                 ),
 
             ) {
             Spacer(modifier = Modifier.height(30.dp))
             Text(
                 text = "To-Do List", style = MaterialTheme.typography.headlineLarge.copy(
-                    color = if (!isSystemInDarkTheme()) Color(0xFF0b2964) else Color(0xFFe1e2ec), fontWeight = FontWeight.Bold
+                    color = if (!isSystemInDarkTheme()) darkBlue else whiteBackground, fontWeight = FontWeight.Bold
                 )
             )
             Spacer(modifier = Modifier.height(21.dp))
             OutlinedTextField(
                 value = task,
                 onValueChange = { task = it },
+                textStyle = TextStyle.Default.copy(color = darkBlue),
                 shape = RoundedCornerShape(60.dp),
-                colors = TextFieldDefaults.colors(unfocusedContainerColor = Color(0xFFe1e2ec), focusedContainerColor = Color(0xFFe1e2ec)),
+                colors = TextFieldDefaults.colors(unfocusedContainerColor = whiteBackground, focusedContainerColor = whiteBackground),
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
                     .height(60.dp),
@@ -95,10 +101,10 @@ fun HomeScreen(
                         },
                         modifier = Modifier.size(width = 90.dp, height = 60.dp),
                         colors = ButtonColors(
-                            containerColor = Color(0xFFff653e),
+                            containerColor = orangeBackground,
                             contentColor = Color.White,
-                            disabledContentColor = Color(0xFFff653e),
-                            disabledContainerColor = Color(0xFFff653e)
+                            disabledContentColor = orangeBackground,
+                            disabledContainerColor = orangeBackground
                         )
                     ) {
                         Text(text = "Add")

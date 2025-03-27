@@ -26,6 +26,9 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.todoapp.R
 import com.example.todoapp.model.Task
+import com.example.todoapp.ui.theme.darkBlue
+import com.example.todoapp.ui.theme.orangeBackground
+import com.example.todoapp.ui.theme.whiteBackground
 
 @Composable
 fun TaskItem(
@@ -38,7 +41,7 @@ fun TaskItem(
         modifier = Modifier
             .fillMaxWidth(0.9f)
             .background(
-                color = Color(0xFFe1e2ec),
+                color = whiteBackground,
                 shape = RoundedCornerShape(20.dp)
             )
     ) {
@@ -56,7 +59,7 @@ fun TaskItem(
             text = buildAnnotatedString {
                 withStyle(
                     style = SpanStyle(
-                        color = Color(0xFF0b2964),
+                        color = darkBlue,
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Medium,
                         textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None
@@ -66,7 +69,7 @@ fun TaskItem(
                 }
                 withStyle(
                     style = SpanStyle(
-                        color = Color(0xFF0b2964),
+                        color = darkBlue,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Light,
                         fontStyle = FontStyle.Italic,
@@ -91,7 +94,7 @@ fun TaskItem(
             Button(
                 onClick = { onEditClick() },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFff653e),
+                    containerColor = orangeBackground,
                     contentColor = Color.White
                 )
             ) {
@@ -103,7 +106,7 @@ fun TaskItem(
             Button(
                 onClick = { onDeleteClick(task.taskId) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFff653e),
+                    containerColor = orangeBackground,
                     contentColor = Color.White
                 )
             ) {
