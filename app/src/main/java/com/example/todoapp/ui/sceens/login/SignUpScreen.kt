@@ -30,7 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -48,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.todoapp.MainViewModel
 import com.example.todoapp.common.enum.LoadStatus
-import com.example.todoapp.data.Result
 import com.example.todoapp.ui.sceens.home.HomeNavigation
 import com.example.todoapp.ui.theme.darkBlue
 import com.example.todoapp.ui.theme.lightBlue
@@ -76,7 +74,6 @@ fun SignUpScreen(
     var pwdCheck by remember {
         mutableStateOf(false)
     }
-    val status = viewModel.authResult.observeAsState()
     val focusManager = LocalFocusManager.current
     LaunchedEffect(Unit) {
         viewModel.updateUsername(tmpemail)
@@ -171,10 +168,15 @@ fun SignUpScreen(
             Button(
                 onClick = {
                     if ((state.value.username.isNotEmpty()) and (state.value.password.isNotEmpty()) and (state.value.confirmpwd.isNotEmpty())) {
-                        if (state.value.password != state.value.confirmpwd)
+                        if (state.value.password != state.value.confirmpwd) {
+                            pwdCheck = false
                             mainViewModel.setError("Mật khẩu và xác nhận mật khẩu không trùng khớp !")
-                        viewModel.signup()
-                    } else pwdCheck = true
+                        }
+                        else{
+                            viewModel.signup()
+                            pwdCheck = true
+                        }
+                    }
                 }, colors = ButtonColors(
                     contentColor = Color.White,
                     containerColor = darkBlue,
@@ -184,11 +186,8 @@ fun SignUpScreen(
             ) {
                 Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null, tint = Color.White)
             }
-            if (state.value.status is LoadStatus.Loading){
-                CircularProgressIndicator()
-            }
-            when (status.value) {
-                is Result.Success -> {
+            when (state.value.status) {
+                is LoadStatus.Success -> {
                     /// chuyen den home
                     LaunchedEffect(Unit) {
                         navController.navigate(HomeNavigation.route) {
@@ -196,12 +195,15 @@ fun SignUpScreen(
                         }
                     }
                 }
-                is Result.Error -> {
+                is LoadStatus.Error -> {
                     pwdCheck = true
-                    mainViewModel.setError(viewModel.authResult.value.toString())
+                    mainViewModel.setError(state.value.status.description)
                     viewModel.updatePwd("")
                     viewModel.updatecpwd("")
                     viewModel.reset()
+                }
+                is LoadStatus.Loading -> {
+                    CircularProgressIndicator()
                 }
                 else -> {}
             }

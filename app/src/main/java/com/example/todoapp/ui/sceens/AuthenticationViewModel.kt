@@ -27,6 +27,4 @@ class AuthenticationViewModel @Inject constructor(
             if (result is Result.Success) _uiState.value.authStatus = true
         }
     }
-
-
 }

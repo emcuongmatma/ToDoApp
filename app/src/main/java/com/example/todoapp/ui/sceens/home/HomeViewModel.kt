@@ -33,26 +33,27 @@ class HomeViewModel @Inject constructor(
     private var _tasks = MutableLiveData<List<Task>>()
     val tasks: LiveData<List<Task>> get() = _tasks
     private val _currentUser = MutableLiveData<String>()
-
-    //    val currentUser: MutableLiveData<String> get() = _currentUser
     init {
         loadCurrentUser()
         loadTasks()
         _uiState.value = _uiState.value.copy(status = LoadStatus.Init())
     }
-
     private fun loadCurrentUser() {
         viewModelScope.launch {
             when (val result = api!!.getCurrentUser()) {
                 is Result.Success -> {
                     _currentUser.value = result.data
+                    _uiState.value = _uiState.value.copy(status = LoadStatus.Success())
                 }
-                is Result.Error -> {}
-                is Result.Loading -> {}
+                is Result.Error -> {
+                    _uiState.value = _uiState.value.copy(status = LoadStatus.Error(result.exception))
+                }
+                is Result.Loading -> {
+                    _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
+                }
             }
         }
     }
-
     fun loadTasks() {
         viewModelScope.launch {
             if (_currentUser.value != null) {
@@ -65,10 +66,15 @@ class HomeViewModel @Inject constructor(
 
     fun deleteTask(taskId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            when (api!!.delTask(taskId, _currentUser.value!!)) {
-                is Result.Success -> {}
-                is Result.Error -> {}
+            when (val result = api!!.delTask(taskId, _currentUser.value!!)) {
+                is Result.Success -> {
+                    _uiState.value = _uiState.value.copy(status = LoadStatus.Success())
+                }
+                is Result.Error -> {
+                    _uiState.value = _uiState.value.copy(status = LoadStatus.Error(result.exception))
+                }
                 is Result.Loading -> {
+                    _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
                 }
             }
         }
@@ -76,10 +82,15 @@ class HomeViewModel @Inject constructor(
 
     fun addTask(task: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            when (api!!.addTask(title = task, username = _currentUser.value!!)) {
-                is Result.Success -> {}
-                is Result.Error -> {}
+            when (val result = api!!.addTask(title = task, username = _currentUser.value!!)) {
+                is Result.Success -> {
+                    _uiState.value = _uiState.value.copy(status = LoadStatus.Success())
+                }
+                is Result.Error -> {
+                    _uiState.value = _uiState.value.copy(status = LoadStatus.Error(result.exception))
+                }
                 is Result.Loading -> {
+                    _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
                 }
             }
         }
@@ -87,10 +98,15 @@ class HomeViewModel @Inject constructor(
 
     fun editTask(task: Task) {
         viewModelScope.launch(Dispatchers.IO) {
-            when (api!!.updateTask(task, _currentUser.value!!)) {
-                is Result.Success -> {}
-                is Result.Error -> {}
+            when (val result = api!!.updateTask(task, _currentUser.value!!)) {
+                is Result.Success -> {
+                    _uiState.value = _uiState.value.copy(status = LoadStatus.Success())
+                }
+                is Result.Error -> {
+                    _uiState.value = _uiState.value.copy(status = LoadStatus.Error(result.exception))
+                }
                 is Result.Loading -> {
+                    _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
                 }
             }
         }
