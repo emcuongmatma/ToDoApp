@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,7 +19,6 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -61,73 +60,75 @@ fun HomeScreen(
     }
     val focusManager = LocalFocusManager.current
     val status by viewModel.uiState.collectAsState()
-    Scaffold { paddingValue ->
-        Column(
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValue)
-                .background(
-                    color = if (isSystemInDarkTheme()) lightBlue else Color.White
-                ),
+    Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                color = if (isSystemInDarkTheme()) lightBlue else Color.White
+            )
+            .statusBarsPadding(),
 
-            ) {
-            Spacer(modifier = Modifier.height(30.dp))
-            Text(
-                text = "To-Do List", style = MaterialTheme.typography.headlineLarge.copy(
-                    color = if (!isSystemInDarkTheme()) darkBlue else whiteBackground, fontWeight = FontWeight.Bold
-                )
+        ) {
+        Spacer(modifier = Modifier.height(30.dp))
+        Text(
+            text = "To-Do List", style = MaterialTheme.typography.headlineLarge.copy(
+                color = if (!isSystemInDarkTheme()) darkBlue else whiteBackground,
+                fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(21.dp))
-            OutlinedTextField(
-                value = task,
-                onValueChange = { task = it },
-                textStyle = TextStyle.Default.copy(color = darkBlue),
-                shape = RoundedCornerShape(60.dp),
-                colors = TextFieldDefaults.colors(unfocusedContainerColor = whiteBackground, focusedContainerColor = whiteBackground),
-                modifier = Modifier
-                    .fillMaxWidth(0.9f)
-                    .height(60.dp),
-                trailingIcon = {
-                    Button(
-                        onClick = {
-                            if (task.isNotEmpty()) {
-                                viewModel.addTask(task)
-                                focusManager.clearFocus()
-                                task = ""
-                            } else
-                                mainViewModel.setError("Hãy nhập Task cần làm")
-                        },
-                        modifier = Modifier.size(width = 90.dp, height = 60.dp),
-                        colors = ButtonColors(
-                            containerColor = orangeBackground,
-                            contentColor = Color.White,
-                            disabledContentColor = orangeBackground,
-                            disabledContainerColor = orangeBackground
-                        )
-                    ) {
-                        Text(text = "Add")
-                    }
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        viewModel.addTask(task)
-                        focusManager.clearFocus()
-                        task = ""
-                    }
-                )
+        )
+        Spacer(modifier = Modifier.height(21.dp))
+        OutlinedTextField(
+            value = task,
+            onValueChange = { task = it },
+            textStyle = TextStyle.Default.copy(color = darkBlue),
+            shape = RoundedCornerShape(60.dp),
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = whiteBackground,
+                focusedContainerColor = whiteBackground
+            ),
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .height(60.dp),
+            trailingIcon = {
+                Button(
+                    onClick = {
+                        if (task.isNotEmpty()) {
+                            viewModel.addTask(task)
+                            focusManager.clearFocus()
+                            task = ""
+                        } else
+                            mainViewModel.setError("Hãy nhập Task cần làm")
+                    },
+                    modifier = Modifier.size(width = 90.dp, height = 60.dp),
+                    colors = ButtonColors(
+                        containerColor = orangeBackground,
+                        contentColor = Color.White,
+                        disabledContentColor = orangeBackground,
+                        disabledContainerColor = orangeBackground
+                    )
+                ) {
+                    Text(text = "Add")
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    viewModel.addTask(task)
+                    focusManager.clearFocus()
+                    task = ""
+                }
             )
-            Log.e("status",status.status.toString())
-            Spacer(modifier = Modifier.height(24.dp))
-            if (status.status is LoadStatus.Loading){
-                CircularProgressIndicator()
-            }else{
-                Lazy(viewModel = viewModel, tasks = tasks)
-            }
+        )
+        Log.e("status", status.status.toString())
+        Spacer(modifier = Modifier.height(24.dp))
+        if (status.status is LoadStatus.Loading) {
+            CircularProgressIndicator()
+        } else {
+            Lazy(viewModel = viewModel, tasks = tasks)
         }
     }
 }

@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -23,7 +23,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -78,13 +77,12 @@ fun LoginScreen(
     }
     val focusManager = LocalFocusManager.current
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
-    Scaffold { paddingValue ->
         Column(
             modifier = Modifier
-                .padding(paddingValue)
                 .background(
                     color = if (isSystemInDarkTheme()) lightBlue else whiteBackground
                 )
+                .statusBarsPadding()
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -181,6 +179,6 @@ fun LoginScreen(
                 else -> {}
             }
         }
-    }
+
 }
 
