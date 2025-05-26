@@ -38,6 +38,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.todoapp.MainViewModel
 import com.example.todoapp.common.enum.LoadStatus
+import com.example.todoapp.ui.sceens.home.components.Lazy
 import com.example.todoapp.ui.theme.darkBlue
 import com.example.todoapp.ui.theme.lightBlue
 import com.example.todoapp.ui.theme.orangeBackground

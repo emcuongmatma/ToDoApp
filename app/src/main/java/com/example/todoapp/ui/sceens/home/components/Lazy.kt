@@ -1,4 +1,4 @@
-package com.example.todoapp.ui.sceens.home
+package com.example.todoapp.ui.sceens.home.components
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.todoapp.model.Task
+import com.example.todoapp.ui.sceens.home.HomeViewModel
 
 @Composable
 fun Lazy(

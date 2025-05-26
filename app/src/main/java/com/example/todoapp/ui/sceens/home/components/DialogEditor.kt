@@ -1,4 +1,4 @@
-package com.example.todoapp.ui.sceens.home
+package com.example.todoapp.ui.sceens.home.components
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import com.example.todoapp.ui.sceens.home.HomeViewModel
 import com.example.todoapp.ui.theme.orangeBackground
 
 @Composable
